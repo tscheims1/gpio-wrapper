@@ -6,6 +6,7 @@
 		echo $this->Form->input('bcm_number');
 		echo $this->Form->input('name');
 		echo $this->Form->input('description');
+		echo $this->Form->input('visibility');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>

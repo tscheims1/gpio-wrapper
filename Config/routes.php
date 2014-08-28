@@ -1,5 +1,7 @@
 <?php
-
+	/*
+	 * Plugin specific routes
+	 */
 	Router::connect('/GpioWrapper/devices/:action',
 		array('plugin' => 'GpioWrapper', 'controller' => 'devices'));
 	Router::connect('/GpioWrapper/devices/',

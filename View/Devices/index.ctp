@@ -7,6 +7,7 @@
 			<th><?php echo $this->Paginator->sort('bcm_number'); ?></th>
 			<th><?php echo $this->Paginator->sort('name'); ?></th>
 			<th><?php echo $this->Paginator->sort('description'); ?></th>
+			<th><?php echo $this->Paginator->sort('visibility'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
@@ -17,6 +18,7 @@
 		<td><?php echo h($device['Device']['bcm_number']); ?>&nbsp;</td>
 		<td><?php echo h($device['Device']['name']); ?>&nbsp;</td>
 		<td><?php echo h($device['Device']['description']); ?>&nbsp;</td>
+		<td><?php echo h($device['Device']['visibility']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $device['Device']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $device['Device']['id'])); ?>

@@ -21,6 +21,11 @@
 			<?php echo h($device['Device']['description']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Visibility'); ?></dt>
+		<dd>
+			<?php echo h($device['Device']['visibility']); ?>
+			&nbsp;
+		</dd>
 	</dl>
 </div>
 <div class="actions">

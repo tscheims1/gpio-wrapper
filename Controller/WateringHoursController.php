@@ -15,7 +15,23 @@ class WateringHoursController extends GpioWrapperAppController {
  * @var array
  */
 	public $components = array('Paginator', 'Session');
+	
 
+
+
+/**
+ * 
+ */
+public function beforeFilter()
+{
+	$repeat = array(
+		'none' => __('none'),
+		'weekly' => __('weekly'),
+		'monthly' => __('monthly'));
+	
+	$this->set('repeat',$repeat);
+	
+}
 /**
  * index method
  *

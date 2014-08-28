@@ -11,6 +11,11 @@
 			<?php echo h($wateringHour['WateringHour']['start']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Time'); ?></dt>
+		<dd>
+			<?php echo h($wateringHour['WateringHour']['time']); ?>
+			&nbsp;
+		</dd>
 		<dt><?php echo __('Status'); ?></dt>
 		<dd>
 			<?php echo h($wateringHour['WateringHour']['status']); ?>

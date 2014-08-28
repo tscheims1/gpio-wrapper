@@ -4,10 +4,10 @@
 		<legend><?php echo __('Add Watering Hour'); ?></legend>
 	<?php
 		echo $this->Form->input('start');
-		echo $this->Form->input('status');
+		echo $this->Form->input('time');
 		echo $this->Form->input('duration');
 		echo $this->Form->input('device_id');
-		echo $this->Form->input('repeat');
+		echo $this->Form->input('repeat',array('type' => 'select', 'options' => $repeat));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>

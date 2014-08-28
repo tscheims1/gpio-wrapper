@@ -5,7 +5,7 @@
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->input('start');
-		echo $this->Form->input('status');
+		echo $this->Form->input('time');
 		echo $this->Form->input('duration');
 		echo $this->Form->input('device_id');
 		echo $this->Form->input('repeat');

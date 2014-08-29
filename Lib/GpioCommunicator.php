@@ -7,6 +7,11 @@
  */ 
 class GpioCommunicator
 {
+	
+	public function __construct()
+	{
+			
+	}
 	/**
 	 * Write a value on a specifc GPIO-Port
 	 * @param int $deviceNumber

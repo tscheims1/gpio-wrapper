@@ -5,12 +5,28 @@
  * @author James Mayr
  * @version 1.0
  */
+
 class GpioShell extends AppShell
 {
 	public $uses = array('GpioWrapper.Device','GpioWrapper.WateringHour');
+	/**
+	 * An Instance of the GpioCommunicator
+	 * @var object
+	 */
+	private $gpioCom;
+	
+	/**
+	 * Interval Map
+	 * @var array
+	 */
+	 private $intervalMap = array(
+	 	'weekly' => 'P1W',
+		'monthly' => 'P1M');
 	
 	public function main()
 	{
+		App::uses('GpioCommunicator','GpioWrapper.Lib');
+		$this->gpioCom = new GpioCommunicator();
 		$now = new DateTime();
 		
 		/*
@@ -25,13 +41,31 @@ class GpioShell extends AppShell
 		foreach($wateringHours as $wateringHour)
 		{
 			/*
+			 * set correct device state
+			 */
+			$this->Device->save(array(
+						'id' => $wateringHour['Device']['id'],
+						'device_state' => 
+							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 1? 'enabled':'disabled' ));
+			
+			
+			/*
 			 * merge date + time to datetime
 			 */ 
 			$wateringTime = new DateTime($wateringHour['WateringHour']['start']
 				." ".$wateringHour['WateringHour']['time']);
-			
+	
+			/*
+			 * check for repeated hours (if necessary)
+			 */
+			 if(array_key_exists($wateringHour['WateringHour']['repeat']))
+			 {
+			 	$wateringTime = $this->repeat($wateringTime, $this->intervalMap[$wateringHour['WateringHour']['repeat']]);
+			 }
+	
 			$invervalString = "PT".abs($wateringHour['WateringHour']['duration'])."M";
 			$wateringTime->add(new DateInterval($invervalString));
+			
 			
 			
 			if($wateringTime->getTimestamp() >= $now->getTimestamp())
@@ -40,13 +74,10 @@ class GpioShell extends AppShell
 				{
 					$this->out('start watering'.$wateringHour['WateringHour']['id']);
 					
-					//TODO: outsource in Communicator
-					$this->Device->save(array(
-						'id' => $wateringHour['Device']['id'],
-						'device_state' => 'enabled'));
+					$gpioCom->write($wateringHour['Device']['bcm_number'],1);
+	
 				}
-				
-						
+		
 			}
 			else
 			{
@@ -57,14 +88,38 @@ class GpioShell extends AppShell
 					/*
 					 * stop the watering
 					 */ 
-					 
-					//TODO: outsource in Communicator
-					$this->Device->save(array(
-						'id' => $wateringHour['Device']['id'],
-						'device_state' => 'disabled'));
+					$gpioCom->write($wateringHour['Device']['bcm_number'],0); 
+					
 				}	
 			}
+			/*
+			 * update the  device state
+			 */
+			$this->Device->save(array(
+						'id' => $wateringHour['Device']['id'],
+						'device_state' => 
+							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 1? 'enabled':'disabled' ));
+			
 		}	
+	}
+	/**
+	 * check for the last sheduled watering hour
+	 * @param DateTime $dateObject
+	 * @param string $interval
+	 * @return DateTime
+	 */ 
+	private function repeat($dateObject,$interval)
+	{
+		$tmp = clone $dateObject;
+		for(;;)
+		{
+			if($tmp->getTimestamp() <= $now->getTimestamp())
+				$tmp->add(new DateInterval($interval));
+			else {
+				$tmp->sub(new DateInterval($interval));
+				return $tmp;
+			}
+		}
 	}
 	
 }

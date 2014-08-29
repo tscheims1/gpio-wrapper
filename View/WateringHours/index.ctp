@@ -25,8 +25,8 @@
 		</td>
 		<td><?php echo h($wateringHour['WateringHour']['repeat']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $wateringHour['WateringHour']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $wateringHour['WateringHour']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view','controller' => 'watering_hours', $wateringHour['WateringHour']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit','controller' => 'watering_hours', $wateringHour['WateringHour']['id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $wateringHour['WateringHour']['id']), array(), __('Are you sure you want to delete # %s?', $wateringHour['WateringHour']['id'])); ?>
 		</td>
 	</tr>

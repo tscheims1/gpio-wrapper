@@ -6,7 +6,7 @@
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('start'); ?></th>
 			<th><?php echo $this->Paginator->sort('time'); ?></th>
-			<th><?php echo $this->Paginator->sort('status'); ?></th>
+			<th><?php echo $this->Paginator->sort('state'); ?></th>
 			<th><?php echo $this->Paginator->sort('duration'); ?></th>
 			<th><?php echo $this->Paginator->sort('device_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('repeat'); ?></th>
@@ -18,7 +18,7 @@
 	<tr>
 		<td><?php echo h($wateringHour['WateringHour']['id']); ?>&nbsp;</td>
 		<td><?php echo h($wateringHour['WateringHour']['start']); ?>&nbsp;</td>
-		<td><?php echo h($wateringHour['WateringHour']['status']); ?>&nbsp;</td>
+		<td><?php echo h($wateringHour['WateringHour']['state']); ?>&nbsp;</td>
 		<td><?php echo h($wateringHour['WateringHour']['duration']); ?>&nbsp;</td>
 		<td>
 			<?php echo $this->Html->link($wateringHour['Device']['name'], array('controller' => 'devices', 'action' => 'view', $wateringHour['Device']['id'])); ?>

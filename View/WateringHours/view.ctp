@@ -8,7 +8,7 @@
 		</dd>
 		<dt><?php echo __('Start'); ?></dt>
 		<dd>
-			<?php echo h($wateringHour['WateringHour']['start']); ?>
+			<?php echo h($wateringHour['WateringHour']['state']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Time'); ?></dt>

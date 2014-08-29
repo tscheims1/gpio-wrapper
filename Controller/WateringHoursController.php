@@ -24,11 +24,19 @@ class WateringHoursController extends GpioWrapperAppController {
  */
 public function beforeFilter()
 {
+	$this->loadModel('GpioWrapper.Device');
+	
 	$repeat = array(
 		'none' => __('none'),
+		'daily' => __('daily'),
 		'weekly' => __('weekly'),
 		'monthly' => __('monthly'));
-	
+	$selectableDevices = $this->Device->find('list', array(
+		'conditions' => array('visibility' => 'visible',),
+		'fields' => array('id','name'),
+		));
+		
+	$this->set('selectableDevices',$selectableDevices);
 	$this->set('repeat',$repeat);
 	
 }
@@ -38,8 +46,9 @@ public function beforeFilter()
  * @return void
  */
 	public function index() {
+		
 		$this->WateringHour->recursive = 0;
-		$this->set('wateringHours', $this->Paginator->paginate());
+		$this->set('wateringHours', $this->Paginator->paginate(array('parent_id' => 0)));
 	}
 
 /**
@@ -66,6 +75,23 @@ public function beforeFilter()
 		if ($this->request->is('post')) {
 			$this->WateringHour->create();
 			if ($this->WateringHour->save($this->request->data)) {
+				
+				$data = $this->request->data;
+				$parentId = $this->WateringHour->getLastInsertId();
+				$data['WateringHour']['id'] = '';
+				/*
+				 * add all hidden devices
+				 */
+				 $devices = $this->Device->find('all',array('conditions' => array(
+				 	'visibility' => 'hidden')));
+				
+				foreach($devices as $device)
+				{
+					$data['WateringHour']['device_id'] = $device['Device']['id'];
+					$data['WateringHour']['parent_id'] = $parentId;
+					$this->WateringHour->save($data);
+				} 
+				
 				$this->Session->setFlash(__('The watering hour has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -89,6 +115,27 @@ public function beforeFilter()
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->WateringHour->save($this->request->data)) {
+				
+				$data = $this->request->data;
+				$parentId = $data['WateringHour']['id'];
+				unset($data['WateringHour']['device_id']);
+				
+				/*
+				 * find all child entries
+				 */
+				 $whs = $this->WateringHour->find('all',array('conditions' => array(
+				 	'parent_id' => $parentId)));
+				
+				/*
+				 * update the child entries
+				 */ 
+				foreach($whs as $wh)
+				{
+					$data['WateringHour']['id'] = $wh['WateringHour']['id'];
+					
+					$this->WateringHour->save($data);
+				} 
+				
 				$this->Session->setFlash(__('The watering hour has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -115,7 +162,13 @@ public function beforeFilter()
 			throw new NotFoundException(__('Invalid watering hour'));
 		}
 		$this->request->allowMethod('post', 'delete');
+		
+		/*
+		 * TODO: All devices must stop, when a scheduler is deleted...
+		 */
 		if ($this->WateringHour->delete()) {
+			
+			$this->WateringHour->deleteAll(array('parent_id' => $id));
 			$this->Session->setFlash(__('The watering hour has been deleted.'));
 		} else {
 			$this->Session->setFlash(__('The watering hour could not be deleted. Please, try again.'));

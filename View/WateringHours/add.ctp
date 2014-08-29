@@ -6,7 +6,7 @@
 		echo $this->Form->input('start');
 		echo $this->Form->input('time');
 		echo $this->Form->input('duration');
-		echo $this->Form->input('device_id');
+		echo $this->Form->input('device_id',array('type' => 'select', 'options' => $selectableDevices));
 		echo $this->Form->input('repeat',array('type' => 'select', 'options' => $repeat));
 	?>
 	</fieldset>

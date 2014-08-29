@@ -20,6 +20,7 @@ class GpioShell extends AppShell
 	 * @var array
 	 */
 	 private $intervalMap = array(
+	 	'daily' => 'P1D',
 	 	'weekly' => 'P1W',
 		'monthly' => 'P1M');
 	
@@ -34,9 +35,8 @@ class GpioShell extends AppShell
 		 */ 
 		$wateringHours = $this->WateringHour->find('all',array(
 			'conditions' => array(
-				'state' => 'enabled',
-				'start <= ?' => $now->format('Y-m-d'),
-				'`time` <= ?' => $now->format('h:i'))));	
+				'state != ?' => 'disabled',
+				'start <= ?' => $now->format('Y-m-d'))));	
 				
 		foreach($wateringHours as $wateringHour)
 		{
@@ -58,23 +58,25 @@ class GpioShell extends AppShell
 			/*
 			 * check for repeated hours (if necessary)
 			 */
-			 if(array_key_exists($wateringHour['WateringHour']['repeat']))
+			 if(array_key_exists($wateringHour['WateringHour']['repeat'],$this->intervalMap))
 			 {
 			 	$wateringTime = $this->repeat($wateringTime, $this->intervalMap[$wateringHour['WateringHour']['repeat']]);
 			 }
-	
 			$invervalString = "PT".abs($wateringHour['WateringHour']['duration'])."M";
 			$wateringTime->add(new DateInterval($invervalString));
 			
-			
+		
 			
 			if($wateringTime->getTimestamp() >= $now->getTimestamp())
 			{
-				if($wateringHour['Device']['device_state'] == 'disabled')
+				if($wateringHour['WateringHour']['state'] == 'enabled')
 				{
 					$this->out('start watering'.$wateringHour['WateringHour']['id']);
-					
-					$gpioCom->write($wateringHour['Device']['bcm_number'],1);
+					$this->WateringHour->save(array(
+						'id' => $wateringHour['WateringHour']['id'],
+						'state' => 'working'));
+						
+					$this->gpioCom->write($wateringHour['Device']['bcm_number'],1);
 	
 				}
 		
@@ -85,10 +87,13 @@ class GpioShell extends AppShell
 				{
 					
 					$this->out('stop watering'.$wateringHour['WateringHour']['id']);
+					$this->WateringHour->save(array(
+						'id' => $wateringHour['WateringHour']['id'],
+						'state' => 'enabled'));
 					/*
 					 * stop the watering
 					 */ 
-					$gpioCom->write($wateringHour['Device']['bcm_number'],0); 
+					$this->gpioCom->write($wateringHour['Device']['bcm_number'],0); 
 					
 				}	
 			}
@@ -111,6 +116,7 @@ class GpioShell extends AppShell
 	private function repeat($dateObject,$interval)
 	{
 		$tmp = clone $dateObject;
+		$now = new DateTime();
 		for(;;)
 		{
 			if($tmp->getTimestamp() <= $now->getTimestamp())

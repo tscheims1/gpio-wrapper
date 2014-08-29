@@ -3,7 +3,7 @@
 	<table cellpadding="0" cellspacing="0">
 	<thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
+			<!--<th><?php echo $this->Paginator->sort('id'); ?></th>-->
 			<th><?php echo $this->Paginator->sort('start'); ?></th>
 			<th><?php echo $this->Paginator->sort('time'); ?></th>
 			<th><?php echo $this->Paginator->sort('state'); ?></th>
@@ -16,9 +16,11 @@
 	<tbody>
 	<?php foreach ($wateringHours as $wateringHour): ?>
 	<tr>
-		<td><?php echo h($wateringHour['WateringHour']['id']); ?>&nbsp;</td>
+		
+		<!--<td><?php echo h($wateringHour['WateringHour']['id']); ?>&nbsp;</td>-->
 		<td><?php echo h($wateringHour['WateringHour']['start']); ?>&nbsp;</td>
-		<td><?php echo h($wateringHour['WateringHour']['state']); ?>&nbsp;</td>
+		<td><?php echo h($wateringHour['WateringHour']['time']); ?>&nbsp;</td>
+			<td><?php echo h($wateringHour['WateringHour']['state']); ?>&nbsp;</td>
 		<td><?php echo h($wateringHour['WateringHour']['duration']); ?>&nbsp;</td>
 		<td>
 			<?php echo $this->Html->link($wateringHour['Device']['name'], array('controller' => 'devices', 'action' => 'view', $wateringHour['Device']['id'])); ?>
@@ -27,7 +29,7 @@
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view','controller' => 'watering_hours', $wateringHour['WateringHour']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit','controller' => 'watering_hours', $wateringHour['WateringHour']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $wateringHour['WateringHour']['id']), array(), __('Are you sure you want to delete # %s?', $wateringHour['WateringHour']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', 'controller' => 'watering_hours',$wateringHour['WateringHour']['id']), array(), __('Are you sure you want to delete # %s?', $wateringHour['WateringHour']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

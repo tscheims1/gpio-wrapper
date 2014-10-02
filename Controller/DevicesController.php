@@ -102,4 +102,37 @@ class DevicesController extends GpioWrapperAppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+	public function change_state($id =null)
+	{
+			
+		$device = $this->Device->find('first', array('conditions'=> array('Device.id' => $id)));
+		
+		App::uses('GpioCommunicator','GpioWrapper.Lib');
+		
+		
+		$gpioCom = new GpioCommunicator();
+		$state = $gpioCom->read($device['Device']['bcm_number']);
+		
+		$value = 1;
+		if($state == 1)$value = 0;
+		
+		$gpioCom->write($device['Device']['bcm_number'],$value);
+		
+	}
+	public function enable($id = null)
+	{
+		$device = $this->Device->find('first', array('conditions'=> array('Device.id' => $id)));
+		App::uses('GpioCommunicator','GpioWrapper.Lib');
+		$gpioCom = new GpioCommunicator();
+		$gpioCom->write($device['Device']['bcm_number'],1);
+		$this->redirect(array('controller' => 'watering_hours','action' => 'index'));
+	}
+	public function disable($id = null)
+	{
+		$device = $this->Device->find('first', array('conditions'=> array('Device.id' => $id)));
+		App::uses('GpioCommunicator','GpioWrapper.Lib');
+		$gpioCom = new GpioCommunicator();
+		$gpioCom->write($device['Device']['bcm_number'],0);
+		$this->redirect(array('controller' => 'watering_hours', 'action' => 'index'));	
+	}
 }

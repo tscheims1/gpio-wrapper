@@ -63,8 +63,29 @@
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
+				
 			</table>
+			<div>
+				<strong>Manuell</strong>
+				<table>
+				<tr>
+					<td>Pin Nummer</td>
+					<td>Name</td>
+					<td>Status</td>
+					<td></td>
+				</tr>
+				<?php foreach($devices as $device):?>
+				<tr>
+					<td><?= $device['Device']['bcm_number'];?></td>
+					<td><?= $device['Device']['name'];?></td>
+					<td><?= $device['Device']['device_state'];?></td>
+					<td><?=$this->Html->link(__('enable',true),array('controller'=>'devices','action' =>'enable','id'=>$device['Device']['id']));?></td>
+					<td><?=$this->Html->link(__('disable',true),array('controller'=>'devices','action' => 'disable','id'=>$device['Device']['id']));?></td>
 
+				</tr>	
+				<?php endforeach;?>	
+				</table>
+			</div>
 			<p>
 				<small><?php echo $this->Paginator->counter(array('format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')));?></small>
 			</p>
@@ -73,6 +94,7 @@
 			$params = $this->Paginator->params();
 			if ($params['pageCount'] > 1) {
 			?>
+			
 			<ul class="pagination pagination-sm">
 				<?php
 					echo $this->Paginator->prev('&larr; Previous', array('class' => 'prev','tag' => 'li','escape' => false), '<a onclick="return false;">&larr; Previous</a>', array('class' => 'prev disabled','tag' => 'li','escape' => false));
@@ -84,6 +106,6 @@
 
 		</div> <!-- end col md 9 -->
 	</div><!-- end row -->
-
+	
 
 </div><!-- end containing of content -->

@@ -48,8 +48,16 @@ public function beforeFilter()
  */
 	public function index() {
 		
+		
+		
 		$this->WateringHour->recursive = 0;
+		
+		
 		$this->set('wateringHours', $this->Paginator->paginate(array('parent_id' => 0)));
+		
+		$this->loadModel('GpioWrapper.Device');	
+		$devices =$this->Device->find('all');
+		$this->set('devices',$devices);
 	}
 
 /**

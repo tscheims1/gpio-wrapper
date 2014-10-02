@@ -1,51 +1,96 @@
 <div class="wateringHours view">
-<h2><?php echo __('Watering Hour'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h1><?php echo __('Watering Hour'); ?></h1>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-3">
+			<div class="actions">
+				<div class="panel panel-default">
+					<div class="panel-heading">Actions</div>
+						<div class="panel-body">
+							<ul class="nav nav-pills nav-stacked">
+									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Watering Hour'), array('action' => 'edit', $wateringHour['WateringHour']['id']), array('escape' => false)); ?> </li>
+		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Watering Hour'), array('action' => 'delete', $wateringHour['WateringHour']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $wateringHour['WateringHour']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Watering Hours'), array('action' => 'index'), array('escape' => false)); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Watering Hour'), array('action' => 'add'), array('escape' => false)); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Devices'), array('controller' => 'devices', 'action' => 'index'), array('escape' => false)); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Device'), array('controller' => 'devices', 'action' => 'add'), array('escape' => false)); ?> </li>
+							</ul>
+						</div><!-- end body -->
+				</div><!-- end panel -->
+			</div><!-- end actions -->
+		</div><!-- end col md 3 -->
+
+		<div class="col-md-9">			
+			<table cellpadding="0" cellspacing="0" class="table table-striped">
+				<tbody>
+				<tr>
+		<th><?php echo __('Id'); ?></th>
+		<td>
 			<?php echo h($wateringHour['WateringHour']['id']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Start'); ?></dt>
-		<dd>
+		</td>
+</tr>
+<tr>
+		<th><?php echo __('Start'); ?></th>
+		<td>
+			<?php echo h($wateringHour['WateringHour']['start']); ?>
+			&nbsp;
+		</td>
+</tr>
+<tr>
+		<th><?php echo __('State'); ?></th>
+		<td>
 			<?php echo h($wateringHour['WateringHour']['state']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Time'); ?></dt>
-		<dd>
-			<?php echo h($wateringHour['WateringHour']['time']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Status'); ?></dt>
-		<dd>
-			<?php echo h($wateringHour['WateringHour']['status']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Duration'); ?></dt>
-		<dd>
+		</td>
+</tr>
+<tr>
+		<th><?php echo __('Duration'); ?></th>
+		<td>
 			<?php echo h($wateringHour['WateringHour']['duration']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Device'); ?></dt>
-		<dd>
+		</td>
+</tr>
+<tr>
+		<th><?php echo __('Device'); ?></th>
+		<td>
 			<?php echo $this->Html->link($wateringHour['Device']['name'], array('controller' => 'devices', 'action' => 'view', $wateringHour['Device']['id'])); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Repeat'); ?></dt>
-		<dd>
+		</td>
+</tr>
+<tr>
+		<th><?php echo __('Repeat'); ?></th>
+		<td>
 			<?php echo h($wateringHour['WateringHour']['repeat']); ?>
 			&nbsp;
-		</dd>
-	</dl>
+		</td>
+</tr>
+<tr>
+		<th><?php echo __('Time'); ?></th>
+		<td>
+			<?php echo h($wateringHour['WateringHour']['time']); ?>
+			&nbsp;
+		</td>
+</tr>
+<tr>
+		<th><?php echo __('Parent Id'); ?></th>
+		<td>
+			<?php echo h($wateringHour['WateringHour']['parent_id']); ?>
+			&nbsp;
+		</td>
+</tr>
+				</tbody>
+			</table>
+
+		</div><!-- end col md 9 -->
+
+	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Watering Hour'), array('action' => 'edit', $wateringHour['WateringHour']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Watering Hour'), array('action' => 'delete', $wateringHour['WateringHour']['id']), array(), __('Are you sure you want to delete # %s?', $wateringHour['WateringHour']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Watering Hours'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Watering Hour'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Devices'), array('controller' => 'devices', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Device'), array('controller' => 'devices', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+

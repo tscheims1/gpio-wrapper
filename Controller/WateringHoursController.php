@@ -24,6 +24,7 @@ class WateringHoursController extends GpioWrapperAppController {
  */
 public function beforeFilter()
 {
+	parent::beforeFilter();
 	$this->loadModel('GpioWrapper.Device');
 	
 	$repeat = array(

@@ -124,7 +124,7 @@ class DevicesController extends GpioWrapperAppController {
 		$device = $this->Device->find('first', array('conditions'=> array('Device.id' => $id)));
 		App::uses('GpioCommunicator','GpioWrapper.Lib');
 		$gpioCom = new GpioCommunicator();
-		$gpioCom->write($device['Device']['bcm_number'],1);
+		$gpioCom->write($device['Device']['bcm_number'],0);
 		$this->redirect(array('controller' => 'watering_hours','action' => 'index'));
 	}
 	public function disable($id = null)
@@ -132,7 +132,8 @@ class DevicesController extends GpioWrapperAppController {
 		$device = $this->Device->find('first', array('conditions'=> array('Device.id' => $id)));
 		App::uses('GpioCommunicator','GpioWrapper.Lib');
 		$gpioCom = new GpioCommunicator();
-		$gpioCom->write($device['Device']['bcm_number'],0);
+		$gpioCom->write($device['Device']['bcm_number'],1);
 		$this->redirect(array('controller' => 'watering_hours', 'action' => 'index'));	
 	}
+	
 }

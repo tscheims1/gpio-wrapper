@@ -22,7 +22,6 @@ class GpioCommunicator
 		$this->validateDeviceNumber($deviceNumber);
 		$this->validateValue($value);
 		
-		
 		exec("gpio -g write ".$deviceNumber." ".$value);
 	}
 	/**
@@ -33,6 +32,7 @@ class GpioCommunicator
 	public function read($deviceNumber)
 	{
 		$this->validateDeviceNumber($deviceNumber);
+		
 		
 		$value = exec("gpio -g read ".$deviceNumber);
 		return $value;

@@ -57,6 +57,19 @@ public function beforeFilter()
 		
 		$this->loadModel('GpioWrapper.Device');	
 		$devices =$this->Device->find('all');
+		
+		/*
+		 * update Device state
+		 */
+		 App::uses('GpioCommunicator','GpioWrapper.Lib');
+		 $gpioCom = new GpioCommunicator();
+		 
+		 foreach($devices as $key => $device)
+		 {
+		 		$devices[$key]['Device']['device_state'] = 
+		 			$gpioCom->read($device['Device']['bcm_number']) == 0?'enabled':'disabled';
+		 } 
+		
 		$this->set('devices',$devices);
 	}
 

@@ -46,7 +46,7 @@ class GpioShell extends AppShell
 			$this->Device->save(array(
 						'id' => $wateringHour['Device']['id'],
 						'device_state' => 
-							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 1? 'enabled':'disabled' ));
+							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 0? 'enabled':'disabled' ));
 			
 			
 			/*
@@ -76,7 +76,7 @@ class GpioShell extends AppShell
 						'id' => $wateringHour['WateringHour']['id'],
 						'state' => 'working'));
 						
-					$this->gpioCom->write($wateringHour['Device']['bcm_number'],1);
+					$this->gpioCom->write($wateringHour['Device']['bcm_number'],0);
 	
 				}
 		
@@ -93,7 +93,7 @@ class GpioShell extends AppShell
 					/*
 					 * stop the watering
 					 */ 
-					$this->gpioCom->write($wateringHour['Device']['bcm_number'],0); 
+					$this->gpioCom->write($wateringHour['Device']['bcm_number'],1); 
 					
 				}	
 			}
@@ -103,7 +103,7 @@ class GpioShell extends AppShell
 			$this->Device->save(array(
 						'id' => $wateringHour['Device']['id'],
 						'device_state' => 
-							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 1? 'enabled':'disabled' ));
+							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 0? 'enabled':'disabled' ));
 			
 		}	
 	}

@@ -37,6 +37,12 @@ public function beforeFilter()
 		'fields' => array('id','name'),
 		));
 		
+	$wateringHourStates = array(
+	'enabled' => __('enabled'),
+	'disabled' => __('disabled'),
+	);
+	
+	$this->set('wateringHourStates',$wateringHourStates);
 	$this->set('selectableDevices',$selectableDevices);
 	$this->set('repeat',$repeat);
 	

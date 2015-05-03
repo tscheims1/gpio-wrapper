@@ -33,7 +33,7 @@
 					<?php echo $this->Form->input('start', array('class' => 'form-control', 'placeholder' => 'Start'));?>
 				</div>
 				<div class="form-group">
-					<?php echo $this->Form->input('state', array('class' => 'form-control', 'placeholder' => 'State'));?>
+					<?php echo $this->Form->input('state', array('class' => 'form-control', 'placeholder' => 'State', 'type' => 'select', 'options' => $wateringHourStates));?>
 				</div>
 				<div class="form-group">
 					<?php echo $this->Form->input('duration', array('class' => 'form-control', 'placeholder' => 'Duration'));?>
@@ -47,9 +47,9 @@
 				<div class="form-group">
 					<?php echo $this->Form->input('time', array('class' => 'form-control', 'placeholder' => 'Time'));?>
 				</div>
-				<div class="form-group">
+				<!--<div class="form-group">
 					<?php echo $this->Form->input('parent_id', array('class' => 'form-control', 'placeholder' => 'Parent Id'));?>
-				</div>
+				</div>-->
 				<div class="form-group">
 					<?php echo $this->Form->submit(__('Submit'), array('class' => 'btn btn-default')); ?>
 				</div>

@@ -118,7 +118,7 @@ class GpioShell extends AppShell
 		foreach($childsToStop as $key => $ele)
 		{
 			//stop all unused childs
-			if(!array_key_exists($key, $childToStart))
+			if(!array_key_exists($key, $childsToStart))
 			{
 				$wateringHours = $this->WateringHour->find('all',array(
 					'conditions' => array(
@@ -131,6 +131,7 @@ class GpioShell extends AppShell
 				}	
 			}	
 		}
+		
 		//Start all used childs
 		foreach($childsToStart as $key => $ele)
 		{
@@ -139,7 +140,7 @@ class GpioShell extends AppShell
 			$wateringHours = $this->WateringHour->find('all',array(
 				'conditions' => array(
 					'state != ?' => 'disabled',
-					'parent' => $key)));
+					'parent_id' => $key)));
 					
 			foreach($wateringHours as $wateringHour)
 			{	

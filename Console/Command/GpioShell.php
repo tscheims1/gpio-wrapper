@@ -36,8 +36,11 @@ class GpioShell extends AppShell
 		$wateringHours = $this->WateringHour->find('all',array(
 			'conditions' => array(
 				'state != ?' => 'disabled',
-				'start <= ?' => $now->format('Y-m-d'))));	
-				
+				'start <= ?' => $now->format('Y-m-d'),
+				'parent' => '0')));	
+		
+		$childsToStart = array();
+		$childsToStop = array();		
 		foreach($wateringHours as $wateringHour)
 		{
 			/*
@@ -76,9 +79,9 @@ class GpioShell extends AppShell
 					$this->WateringHour->save(array(
 						'id' => $wateringHour['WateringHour']['id'],
 						'state' => 'working'));
-						
+					//starting Watering Hours	
 					$this->gpioCom->write($wateringHour['Device']['bcm_number'],0);
-	
+					$childsToStart [$wateringHour['WateringHour']['id']] = true;
 				}
 		
 			}
@@ -95,7 +98,8 @@ class GpioShell extends AppShell
 					 * stop the watering
 					 */ 
 					$this->gpioCom->write($wateringHour['Device']['bcm_number'],1); 
-					
+					$childsToStop [$wateringHour['WateringHour']['id']] = true;
+					//$childsToStop [] = $wateringHour['WateringHour']['id'];
 				}	
 			}
 			/*
@@ -106,7 +110,44 @@ class GpioShell extends AppShell
 						'device_state' => 
 							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 0? 'enabled':'disabled' ));
 			
-		}	
+		}
+
+		/*
+		 * update childs
+		 */
+		foreach($childsToStop as $key => $ele)
+		{
+			//stop all unused childs
+			if(!array_key_exists($key, $childToStart))
+			{
+				$wateringHours = $this->WateringHour->find('all',array(
+					'conditions' => array(
+						'state != ?' => 'disabled',
+						'parent' => $key)));
+						
+				foreach($wateringHours as $wateringHour)
+				{	
+					$this->gpioCom->write($wateringHour['Device']['bcm_number'],1);
+				}	
+			}	
+		}
+		//Start all used childs
+		foreach($childsToStart as $key => $ele)
+		{
+			//stop all unused childs
+
+			$wateringHours = $this->WateringHour->find('all',array(
+				'conditions' => array(
+					'state != ?' => 'disabled',
+					'parent' => $key)));
+					
+			foreach($wateringHours as $wateringHour)
+			{	
+				$this->gpioCom->write($wateringHour['Device']['bcm_number'],0);
+			}	
+				
+		}
+			
 	}
 	/**
 	 * check for the last sheduled watering hour

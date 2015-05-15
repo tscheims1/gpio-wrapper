@@ -37,7 +37,7 @@ class GpioShell extends AppShell
 			'conditions' => array(
 				'state != ?' => 'disabled',
 				'start <= ?' => $now->format('Y-m-d'),
-				'parent' => '0')));	
+				'parent_id' => '0')));	
 		
 		$childsToStart = array();
 		$childsToStop = array();		
@@ -123,7 +123,7 @@ class GpioShell extends AppShell
 				$wateringHours = $this->WateringHour->find('all',array(
 					'conditions' => array(
 						'state != ?' => 'disabled',
-						'parent' => $key)));
+						'parent_id' => $key)));
 						
 				foreach($wateringHours as $wateringHour)
 				{	

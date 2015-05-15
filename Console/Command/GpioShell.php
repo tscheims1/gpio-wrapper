@@ -90,17 +90,24 @@ class GpioShell extends AppShell
 					}
 					
 				}
+				else if($wateringHour['WateringHour']['state'] == 'working')
+				{
+					if($wateringHour['WateringHour']['parent_id'] !=0)
+					{
+						$childsToStart [$wateringHour['Device']['bcm_number']] = true;
+					}	
+				}
 		
 			}
 			else
 			{
+				
+				
 				if($wateringHour['Device']['device_state'] == 'enabled')
 				{
 					
 					$this->out('stop watering'.$wateringHour['WateringHour']['id']);
-					$this->WateringHour->save(array(
-						'id' => $wateringHour['WateringHour']['id'],
-						'state' => 'enabled'));
+					
 					/*
 					 * stop the watering
 					 */ 
@@ -112,7 +119,7 @@ class GpioShell extends AppShell
 					{
 						$childsToStop [$wateringHour['Device']['bcm_number']] = true;
 					}
-				}	
+				}
 			}
 			/*
 			 * update the  device state
@@ -132,14 +139,14 @@ class GpioShell extends AppShell
 			//stop all unused childs
 			if(!array_key_exists($key, $childsToStart))
 			{
-				$this->gpioCom->write($ele['Device']['bcm_number'],1);	
+				$this->gpioCom->write($key,1);	
 			}	
 		}
 		
 		//Start all used childs
 		foreach($childsToStart as $key => $ele)
 		{
-			$this->gpioCom->write($ele['Device']['bcm_number'],0);			
+			$this->gpioCom->write($key,0);			
 		}
 			
 	}

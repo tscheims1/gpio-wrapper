@@ -36,8 +36,8 @@ class GpioShell extends AppShell
 		$wateringHours = $this->WateringHour->find('all',array(
 			'conditions' => array(
 				'state != ?' => 'disabled',
-				'start <= ?' => $now->format('Y-m-d'),
-				'parent_id' => '0')));	
+				'start <= ?' => $now->format('Y-m-d')
+				)));	
 		
 		$childsToStart = array();
 		$childsToStop = array();		
@@ -79,9 +79,16 @@ class GpioShell extends AppShell
 					$this->WateringHour->save(array(
 						'id' => $wateringHour['WateringHour']['id'],
 						'state' => 'working'));
-					//starting Watering Hours	
-					$this->gpioCom->write($wateringHour['Device']['bcm_number'],0);
-					$childsToStart [$wateringHour['WateringHour']['id']] = true;
+					//starting Watering Hours
+					if($wateringHour['WateringHour']['parent_id'] ==0)
+					{	
+						$this->gpioCom->write($wateringHour['Device']['bcm_number'],0);
+					}
+					else 
+					{
+						$childsToStart [$wateringHour['Device']['bcm_number']] = true;
+					}
+					
 				}
 		
 			}
@@ -97,9 +104,14 @@ class GpioShell extends AppShell
 					/*
 					 * stop the watering
 					 */ 
-					$this->gpioCom->write($wateringHour['Device']['bcm_number'],1); 
-					$childsToStop [$wateringHour['WateringHour']['id']] = true;
-					//$childsToStop [] = $wateringHour['WateringHour']['id'];
+					if($wateringHour['WateringHour']['parent_id'] ==0)
+					{	
+						$this->gpioCom->write($wateringHour['Device']['bcm_number'],1);
+					}
+					else 
+					{
+						$childsToStop [$wateringHour['Device']['bcm_number']] = true;
+					}
 				}	
 			}
 			/*
@@ -120,33 +132,14 @@ class GpioShell extends AppShell
 			//stop all unused childs
 			if(!array_key_exists($key, $childsToStart))
 			{
-				$wateringHours = $this->WateringHour->find('all',array(
-					'conditions' => array(
-						'state != ?' => 'disabled',
-						'parent_id' => $key)));
-						
-				foreach($wateringHours as $wateringHour)
-				{	
-					$this->gpioCom->write($wateringHour['Device']['bcm_number'],1);
-				}	
+				$this->gpioCom->write($ele['Device']['bcm_number'],1);	
 			}	
 		}
 		
 		//Start all used childs
 		foreach($childsToStart as $key => $ele)
 		{
-			//stop all unused childs
-
-			$wateringHours = $this->WateringHour->find('all',array(
-				'conditions' => array(
-					'state != ?' => 'disabled',
-					'parent_id' => $key)));
-					
-			foreach($wateringHours as $wateringHour)
-			{	
-				$this->gpioCom->write($wateringHour['Device']['bcm_number'],0);
-			}	
-				
+			$this->gpioCom->write($ele['Device']['bcm_number'],0);			
 		}
 			
 	}

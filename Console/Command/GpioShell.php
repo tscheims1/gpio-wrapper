@@ -41,11 +41,13 @@ class GpioShell extends AppShell
 		
 		$childsToStart = array();
 		$childsToStop = array();		
+		
 		foreach($wateringHours as $wateringHour)
 		{
 			/*
 			 * set correct device state
 			 */
+			
 			$this->Device->save(array(
 						'id' => $wateringHour['Device']['id'],
 						'device_state' => 
@@ -73,6 +75,7 @@ class GpioShell extends AppShell
 			if($wateringTime->getTimestamp() <= $now->getTimestamp() && 
 				$now->getTimestamp() <= $endWateringHour->getTimestamp())
 			{
+				
 				if($wateringHour['WateringHour']['state'] == 'enabled')
 				{
 					$this->out('start watering'.$wateringHour['WateringHour']['id']);
@@ -86,15 +89,19 @@ class GpioShell extends AppShell
 					}
 					else 
 					{
-						$childsToStart [$wateringHour['Device']['bcm_number']] = true;
+						$childsToStart [$wateringHour['Device']['bcm_number']] = $wateringHour['WateringHour']['id'];
 					}
+
+					$this->WateringHour->save(array(
+						'id' => $wateringHour['WateringHour']['id'],
+						'state' => 'working'));	
 					
 				}
 				else if($wateringHour['WateringHour']['state'] == 'working')
 				{
 					if($wateringHour['WateringHour']['parent_id'] !=0)
 					{
-						$childsToStart [$wateringHour['Device']['bcm_number']] = true;
+						$childsToStart [$wateringHour['Device']['bcm_number']] = $wateringHour['WateringHour']['id'];
 					}	
 				}
 		
@@ -117,9 +124,14 @@ class GpioShell extends AppShell
 					}
 					else 
 					{
-						$childsToStop [$wateringHour['Device']['bcm_number']] = true;
+						$childsToStop [$wateringHour['Device']['bcm_number']] = $wateringHour['WateringHour']['id'];
 					}
 				}
+				$this->WateringHour->save(array(
+						'id' => $wateringHour['WateringHour']['id'],
+						'state' => 'enabled'));	
+				
+
 			}
 			/*
 			 * update the  device state
@@ -128,6 +140,7 @@ class GpioShell extends AppShell
 						'id' => $wateringHour['Device']['id'],
 						'device_state' => 
 							$this->gpioCom->read($wateringHour['Device']['bcm_number']) == 0? 'enabled':'disabled' ));
+			
 			
 		}
 
@@ -140,13 +153,21 @@ class GpioShell extends AppShell
 			if(!array_key_exists($key, $childsToStart))
 			{
 				$this->gpioCom->write($key,1);	
+				$this->WateringHour->save(array(
+						'id' => $ele,
+						'state' => 'enabled'));	
 			}	
 		}
 		
 		//Start all used childs
+		
 		foreach($childsToStart as $key => $ele)
 		{
-			$this->gpioCom->write($key,0);			
+			
+			$this->gpioCom->write($key,0);
+			$this->WateringHour->save(array(
+						'id' => $ele,
+						'state' => 'working'));			
 		}
 			
 	}

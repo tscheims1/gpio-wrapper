@@ -62,7 +62,7 @@ class GpioShell extends AppShell
 			 {
 			 	$wateringTime = $this->repeat($wateringTime, $this->intervalMap[$wateringHour['WateringHour']['repeat']]);
 			 }
-			$invervalString = "PT".abs($wateringHour['WateringHour']['duration'])."M";
+			$invervalString = "PT".abs($wateringHour['WateringHour']['duration'])."i";
 			$wateringTime->add(new DateInterval($invervalString));
 			
 		

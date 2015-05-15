@@ -37,7 +37,7 @@
 					<?php echo $this->Form->input('start', array('class' => 'form-control', 'placeholder' => 'Start'));?>
 				</div>
 				<div class="form-group">
-					<?php echo $this->Form->input('state', array('class' => 'form-control', 'placeholder' => 'State'));?>
+								<?php echo $this->Form->input('state', array('class' => 'form-control', 'placeholder' => 'State', 'type' => 'select', 'options' => $wateringHourStates));?>
 				</div>
 				<div class="form-group">
 					<?php echo $this->Form->input('duration', array('class' => 'form-control', 'placeholder' => 'Duration'));?>

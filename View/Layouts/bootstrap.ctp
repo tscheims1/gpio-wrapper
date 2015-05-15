@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
 	<title>
-		<?php $now = new DateTime();?>
+		<?php $now = new DateTime('now');?>
 		<?php echo $title_for_layout; ?>
 	</title>
     <meta charset="utf-8">
@@ -44,7 +44,7 @@
     <div class="container">
 
 			<?php echo $this->Session->flash(); ?>
-			<div>Server Time: <?php echo $now->format('d.M.Y H:m:s');?></div>
+			<div>Server Time: <?php echo $now->format('d.M.Y H:i:s');?></div>
 			<?php echo $this->fetch('content'); ?>
 
     </div><!-- /.container -->

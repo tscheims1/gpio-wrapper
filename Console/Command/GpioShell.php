@@ -54,7 +54,7 @@ class GpioShell extends AppShell
 			 */ 
 			$wateringTime = new DateTime($wateringHour['WateringHour']['start']
 				." ".$wateringHour['WateringHour']['time']);
-	
+			$endWateringHour = clone $wateringTime;
 			/*
 			 * check for repeated hours (if necessary)
 			 */
@@ -62,12 +62,13 @@ class GpioShell extends AppShell
 			 {
 			 	$wateringTime = $this->repeat($wateringTime, $this->intervalMap[$wateringHour['WateringHour']['repeat']]);
 			 }
-			$invervalString = "PT".abs($wateringHour['WateringHour']['duration'])."i";
-			$wateringTime->add(new DateInterval($invervalString));
+			$invervalString = "PT".abs($wateringHour['WateringHour']['duration'])."M";
+			$endWateringHour->add(new DateInterval($invervalString));
 			
 		
 			
-			if($wateringTime->getTimestamp() >= $now->getTimestamp())
+			if($wateringTime->getTimestamp() <= $now->getTimestamp() && 
+				$now->getTimestamp() <= $endWateringHour->getTimestamp())
 			{
 				if($wateringHour['WateringHour']['state'] == 'enabled')
 				{
